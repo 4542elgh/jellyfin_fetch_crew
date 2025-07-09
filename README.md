@@ -1,8 +1,9 @@
 # Jellyfin Cast & Crew Portrait Fix
-
 My Jellyfin instance has this issue where cast and crew portrait photos don't load automatically and remain blank until you manually click on each person. Even when a person has a picture hash in the database, the frontend may still display a blank image until their detail page is accessed.
 
 This Python script solves the problem by automatically sending GET requests to every cast and crew member's detail page, which triggers Jellyfin to fetch and cache their portrait images. My run time is approximately 9 minutes for a 14TB library on Intel 12700K.
+
+![Screenshot](./src/20250708_screenshot.png)
 
 Configure your Jellyfin API credentials in a `.env` file and run the script to populate all missing cast and crew portraits in your library.
 
@@ -15,8 +16,11 @@ Configure your Jellyfin API credentials in a `.env` file and run the script to p
     ```env
     # Read .env.example for details
     API_KEY=your_jellyfin_api_key
-    BASE_URL=http://your-jellyfin-server:8096
+    BASE_URL=http://your-jellyfin-ip:8096 or https://jellyfin.example.com
     USER=your_username
     USERID=your_user_id
+    CORE_COUNT=MAX
     ```
-6. Run: `python main.py`. There is no indicator on how much is processed.
+6. Run `python3 main.py`. 
+7. You will see a progress indicator showing you current/total request (% compelte)
+`Progress: 44/22852 (0.2%)`
