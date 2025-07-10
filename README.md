@@ -11,7 +11,7 @@ Configure your Jellyfin API credentials in a `.env` file and run the script to p
 1. Clone this repo with `https` or `ssh`
 2. Create venv environment `python3 -m venv .venv`
 3. Activate `venv` with `source .venv/bin/activate` or `.\.venv\bin\Activate.ps1` if you are on powershell. Your prompt should have `(.venv)` prefixing shell prompt
-4. Install dependencies: `pip install requests dotenv`
+4. Install dependencies: `pip install -r requirements.txt`
 5. Create `.env` file with your Jellyfin credentials:
     ```env
     # Read .env.example for details
