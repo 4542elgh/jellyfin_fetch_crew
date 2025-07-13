@@ -30,5 +30,5 @@ Configure your Jellyfin API credentials in a `.env` file and run the script to p
 2. Try your best to make new feature test coverage 100%.
 3. Start unit test with `coverage run -m unittest && coverage report` or `coverage run -m unittest; coverage report` (if on Powershell)
 
-## Acknowledgments
+# Acknowledgments
 The development of this script was inspired by the GitHub issue: https://github.com/jellyfin/jellyfin/issues/8103 and the corresponding script contributed by deltonio2 and nosebeggar. This implementation builds upon the foundational work provided in the original script, with optimizations for improved performance and execution speed.
