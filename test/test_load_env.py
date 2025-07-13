@@ -1,9 +1,16 @@
-import os
+"""
+# test/test_load_env.py
+Unit tests for the load_env.load_env() function.
+It includes tests for: ensuring the correct number of CPU cores is set, handling missing environment variables, and ensuring the function exits with an error message when required variables are not set.
+"""
 import unittest
-from unittest.mock import patch, Mock, call
+from unittest.mock import patch
 from load_env import load_env
 
-class Test_load_env(unittest.TestCase):
+class TestLoadEnv(unittest.TestCase):
+    """
+    Unit tests for the load_env.load_env() function.
+    """
 
     def setUp(self):
         self.env = {
@@ -30,6 +37,9 @@ class Test_load_env(unittest.TestCase):
     @patch("os.getenv")
     @patch("os.cpu_count")
     def test_max_core(self, mock_cpu_count, mock_getenv):
+        """
+        Test that when 'CORE_COUNT' is set to 'MAX', the function uses the maximum number of CPU cores.
+        """
         # Always mock first, then execute. This way execute can take mock values
         mock_cpu_count.side_effect = [8] # This need to be an iterator
 
@@ -42,7 +52,7 @@ class Test_load_env(unittest.TestCase):
         result = load_env.load_env()
 
         # Assertion iterating with keys
-        for key in self.env["complete"].keys():
+        for key in self.env["complete"]:
             if key != "CORE_COUNT":
                 self.assertEqual(result[key], self.env["complete"][key])
             else:
@@ -53,6 +63,9 @@ class Test_load_env(unittest.TestCase):
     @patch("os.getenv")
     @patch("os.cpu_count")
     def test_default_core(self, mock_cpu_count, mock_getenv):
+        """
+        Test that when 'CORE_COUNT' is not provided, the function defaults to 4 cores.
+        """
         mock_cpu_count.side_effect = [8]
 
         def getenv_side_effect(key, default=None):
@@ -62,7 +75,7 @@ class Test_load_env(unittest.TestCase):
 
         result = load_env.load_env()
 
-        for key in self.env["complete"].keys():
+        for key in self.env["complete"]:
             if key != "CORE_COUNT":
                 self.assertEqual(result[key], self.env["complete"][key])
             else:
@@ -75,6 +88,9 @@ class Test_load_env(unittest.TestCase):
     @patch("os.getenv")
     @patch("os.cpu_count")
     def test_missing_fields(self, mock_cpu_count, mock_getenv, mock_print, mock_exit):
+        """
+        Test that if required environment variables are missing, the function prints an error message and exits with code 1.
+        """
         mock_cpu_count.side_effect = [8]
 
         def getenv_side_effect(key, default=None):

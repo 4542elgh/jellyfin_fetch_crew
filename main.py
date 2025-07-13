@@ -1,3 +1,7 @@
+"""
+This script fetches all cast and crew members from a Jellyfin server using multithreading.
+"""
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from fetch_request import fetch_request
 from load_env import load_env
@@ -8,11 +12,14 @@ def main():
     """
     Main function to fetch all cast and crew members from Jellyfin.
     """
+    start_time = time.time()
     ids = fetch_request.get_all_crew_ids(env)
     if len(ids) == 0:
         print("Did not find any cast and crew. Exiting...")
         exit(0)
     execute_requests(env, ids)
+    end_time = time.time()
+    print(f"\nProcessed {len(ids)} crew & cast in {end_time - start_time:.2f} seconds.")
 
 
 def execute_requests(request_env: dict, ids: set) -> None:

@@ -1,3 +1,6 @@
+"""
+This script fetches all cast and crew members from a Jellyfin server.
+"""
 import time
 import requests
 

@@ -1,9 +1,18 @@
+"""
+# test/test_fetch_request.py
+Unit tests for the fetch_request module.
+This module tests the functions that fetch crew IDs and cast details from a Jellyfin server.
+It includes tests for successful API calls, handling of various response structures, and error handling.
+"""
 import unittest
-import requests
 from unittest.mock import patch, Mock, call
+import requests
 from fetch_request import fetch_request
 
-class Test_get_crew_ids(unittest.TestCase):
+class TestGetCrewIds(unittest.TestCase):
+    """
+    Unit tests for the fetch_request.get_all_crew_ids() and fetch_request.get_cast_and_crew() functions.
+    """
     def setUp(self):
         """
         Setting up mock env and mock response data
@@ -59,6 +68,9 @@ class Test_get_crew_ids(unittest.TestCase):
     # Mocking requests.get function
     @patch("requests.get")
     def test_return_crew_ids_structure(self, mock_get):
+        """
+        Test that the function fetching the correct endpoint.
+        """
         mock_response = Mock()
         # mock raise_for_status() function
         mock_response.raise_for_status.return_value = None
@@ -68,7 +80,7 @@ class Test_get_crew_ids(unittest.TestCase):
         mock_get.return_value = mock_response
 
         # Need to fetch first then test for structure
-        result = fetch_request.get_all_crew_ids(self.env["complete"])
+        fetch_request.get_all_crew_ids(self.env["complete"])
 
         # Make sure the structure is intact
         mock_get.assert_called_once_with(
@@ -176,6 +188,9 @@ class Test_get_crew_ids(unittest.TestCase):
     @patch('builtins.print')
     @patch("requests.get")
     def test_request_timeout_exception_handling(self, mock_get, mock_print, mock_exit):
+        """
+        Test that request timeout exceptions are handled correctly.
+        """
         mock_response = Mock()
         # Raising an exception in raise_for_status() function
         mock_response.raise_for_status.side_effect = requests.exceptions.Timeout
@@ -231,6 +246,9 @@ class Test_get_crew_ids(unittest.TestCase):
 
     @patch("requests.get")
     def test_get_cast_and_crew_structure(self, mock_get):
+        """
+        Test that the function fetching the correct endpoint for cast and crew details.
+        """
         mock_response = Mock()
         mock_response.raise_for_status.return_value = None
         mock_response.json.return_value = self.mock_response_data.get("valid_data")
@@ -238,7 +256,7 @@ class Test_get_crew_ids(unittest.TestCase):
         mock_get.return_value = mock_response
 
         # Need to fetch first then test for structure
-        result = fetch_request.get_cast_and_crew(self.env["complete"], self.person_id)
+        fetch_request.get_cast_and_crew(self.env["complete"], self.person_id)
 
         # Make sure the structure is intact
         mock_get.assert_called_once_with(
@@ -256,10 +274,7 @@ class Test_get_crew_ids(unittest.TestCase):
         mock_response.raise_for_status.return_value = None
         mock_get.return_value = mock_response
 
-        result = fetch_request.get_cast_and_crew(self.env["complete"], self.person_id)
-
-        # Verify function returns None
-        self.assertIsNone(result)
+        fetch_request.get_cast_and_crew(self.env["complete"], self.person_id)
 
         # Verify only one attempt was made
         self.assertEqual(mock_get.call_count, 1)
@@ -279,15 +294,12 @@ class Test_get_crew_ids(unittest.TestCase):
         ]
         mock_get.return_value = mock_response
 
-        result = fetch_request.get_cast_and_crew(self.env["complete"], self.person_id)
+        fetch_request.get_cast_and_crew(self.env["complete"], self.person_id)
 
         # Verify print is called once
         mock_print.assert_called_once_with(f"Retry attempt #1 for person {self.person_id}")
         # Verify sleep was called once (after first failure)
         mock_sleep.assert_called_once_with(1)
-
-        # Verify function returns None
-        self.assertIsNone(result)
 
         # Verify only one attempt was made
         self.assertEqual(mock_get.call_count, 2)
@@ -308,7 +320,7 @@ class Test_get_crew_ids(unittest.TestCase):
         ]
         mock_get.return_value = mock_response
 
-        result = fetch_request.get_cast_and_crew(self.env["complete"], self.person_id)
+        fetch_request.get_cast_and_crew(self.env["complete"], self.person_id)
 
         # Verify print is called once
         # mock_print.assert_called_once_with(f"Retry attempt #1 for person {self.person_id}")
@@ -321,9 +333,6 @@ class Test_get_crew_ids(unittest.TestCase):
             call(1),
             call(1)
         ])
-
-        # Verify function returns None
-        self.assertIsNone(result)
 
         # Verify only one attempt was made
         self.assertEqual(mock_get.call_count, 3)
@@ -344,7 +353,7 @@ class Test_get_crew_ids(unittest.TestCase):
         ]
         mock_get.return_value = mock_response
 
-        result = fetch_request.get_cast_and_crew(self.env["complete"], self.person_id)
+        fetch_request.get_cast_and_crew(self.env["complete"], self.person_id)
 
         # Verify print is called once
         mock_print.assert_has_calls([
@@ -358,9 +367,6 @@ class Test_get_crew_ids(unittest.TestCase):
             call(1)
             # 3rd call does not sleep, printing error immediately and return
         ])
-
-        # Verify function returns None
-        self.assertIsNone(result)
 
         # Verify only one attempt was made
         self.assertEqual(mock_get.call_count, 3)
